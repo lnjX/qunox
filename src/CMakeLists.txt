@@ -1,4 +1,5 @@
 qt5_add_resources(qunox_SRCS resources.qrc)
-add_executable(qunox main.cpp ${qunox_SRCS})
-target_link_libraries(qunox Qt5::Qml Qt5::Gui)
-
+add_executable(qunox main.cpp QunoX.cpp ${qunox_SRCS})
+target_link_libraries(qunox Qt5::Qml Qt5::Gui KF5::Kirigami2 ${qxmpp_LIBRARIES})
+target_include_directories(qunox PUBLIC ${qxmpp_INCLUDE_DIRS})
+target_compile_options(qunox PUBLIC ${qxmpp_CFLAGS_OTHER})

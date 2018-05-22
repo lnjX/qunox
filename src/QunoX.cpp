@@ -28,36 +28,13 @@
  *  along with QunoX.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.6
-import QtQuick.Controls 2.2
-import org.kde.kirigami 2.3 as Kirigami
+#include "QunoX.h"
 
-Kirigami.ApplicationWindow {
-    visible: true
-    width: 1024
-    height: 576
+QunoX::QunoX(QObject *parent)
+    : QXmppClient(parent)
+{
+}
 
-    globalDrawer: Kirigami.GlobalDrawer {
-        title: "QunoX"
-
-        actions: [
-            Kirigami.Action {
-                text: qsTr("Disconnect")
-                enabled: qunox.state === 2
-                iconName: "system-shutdown"
-                onTriggered: {
-                    qunox.disconnectFromServer()
-                }
-            }
-        ]
-    }
-
-    Component {id: logInPage; LogInPage {}}
-
-    Component.onCompleted: {
-        pageStack.push(logInPage)
-    }
-
-    Component.onDestruction: {
-    }
+QunoX::~QunoX()
+{
 }

@@ -30,10 +30,17 @@
 
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QQmlContext>
+#include "QunoX.h"
 
 int main(int argc, char *argv[])
 {
+    QunoX qunox;
+
     QGuiApplication app(argc, argv);
-    QQmlApplicationEngine engine(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+    QQmlApplicationEngine engine;
+    engine.rootContext()->setContextProperty("qunox", &qunox);
+    engine.load(QUrl(QStringLiteral("qrc:/qml/main.qml")));
+
     return app.exec();
 }

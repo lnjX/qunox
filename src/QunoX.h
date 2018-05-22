@@ -28,36 +28,59 @@
  *  along with QunoX.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import QtQuick 2.6
-import QtQuick.Controls 2.2
-import org.kde.kirigami 2.3 as Kirigami
+#ifndef QUNOX_H
+#define QUNOX_H
 
-Kirigami.ApplicationWindow {
-    visible: true
-    width: 1024
-    height: 576
+#include <qxmpp/QXmppClient.h>
+#include <QString>
+#include <QSettings>
 
-    globalDrawer: Kirigami.GlobalDrawer {
-        title: "QunoX"
+/**
+ * @todo write docs
+ */
+class QunoX : public QXmppClient
+{
+    Q_OBJECT
+    Q_PROPERTY(QString jid READ getJid WRITE setJid NOTIFY jidChanged)
+    Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY passwordChanged)
 
-        actions: [
-            Kirigami.Action {
-                text: qsTr("Disconnect")
-                enabled: qunox.state === 2
-                iconName: "system-shutdown"
-                onTriggered: {
-                    qunox.disconnectFromServer()
-                }
-            }
-        ]
+public:
+    QunoX(QObject *parent = nullptr);
+
+    ~QunoX();
+
+    Q_INVOKABLE bool isConnected() const
+    {
+        return QXmppClient::isConnected();
     }
 
-    Component {id: logInPage; LogInPage {}}
-
-    Component.onCompleted: {
-        pageStack.push(logInPage)
+    void setJid(QString jid)
+    {
+        settings.setValue("auth/jid", jid);
     }
 
-    Component.onDestruction: {
+    QString getJid() const
+    {
+        return settings.value("auth/jid").toString();
     }
-}
+
+    void setPassword(QString password)
+    {
+        settings.setValue("auth/password", QString::fromUtf8(password.toUtf8().toBase64()));
+    }
+
+    QString getPassword() const
+    {
+        return QString(QByteArray::fromBase64(settings.value("auth/password")
+                                              .toString().toUtf8()));
+    }
+
+signals:
+    void jidChanged();
+    void passwordChanged();
+
+private:
+    QSettings settings;
+};
+
+#endif // QUNOX_H
